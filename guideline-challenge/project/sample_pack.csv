@@ -1,16 +1,16 @@
 sample_id,split,tags,reason
-BDD07,example,normal,Đèn đi thẳng xanh rõ ràng làm ví dụ
-LISA01,example,normal;conflict,Ví dụ ngã tư có đèn rẽ trái và đi thẳng
-BDD02,example,normal,Đèn ban ngày bình thường
-BDD11,example,normal,Đèn khu dân cư
-BDD15,calibration,small_far;ambiguity,Đèn khá xa dễ nhầm
-BDD17,calibration,edge;low_visibility,Đèn mờ nhòe do mưa và kính đọng nước
-BDD20,calibration,ambiguity,Ảnh có bóng phản chiếu trên kính lái
-BDD21,calibration,normal;edge,Đường có 2 cụm đèn hai bên cho làn đi thẳng
-BDD25,calibration,edge;low_visibility,Cảnh báo không khoanh bóng đèn phản chiếu dưới đường
-LISA03,calibration,critical,Test nội bộ loại bỏ đèn rẽ trái
-BDD12,blind,normal,Ảnh thi: Đèn đỏ đi thẳng bình thường cực dễ
-BDD18,blind,edge;low_visibility,Ảnh thi: Tối đen chỉ thấy quầng đỏ không thấy vỏ đèn
-BDD22,blind,edge;small_far,Ảnh thi: Đèn tít chân trời dưới 10px (cấm vẽ)
-BDD26,blind,ambiguity,Ảnh thi: Đèn chói lóa khổng lồ không rõ vỏ
-LISA08,blind,critical;conflict,Ảnh thi: Gài bẫy khoanh nhầm đèn rẽ trái
+BDD07,example,normal,Hai cụm đèn ở giao lộ để minh họa instance riêng
+LISA01,example,conflict;critical,Phân biệt đèn mũi tên với đèn tròn; chỉ dùng ảnh hiện tại
+BDD02,example,normal,Minh họa vỏ đèn và phần bị cắt tại mép ảnh
+BDD11,example,negative,Tín hiệu đi bộ không thuộc traffic_light
+BDD15,calibration,small_far;ambiguity,Kiểm ngưỡng 10 px ở cả hai chiều
+BDD17,calibration,edge;low_visibility;occlusion,Mưa và vật chắn kính làm khó xác định biên
+BDD20,calibration,small_far;ambiguity,Đối tượng xa và vùng kính bị che
+BDD21,calibration,normal;ambiguity,Kiểm màu theo từng cụm không suy từ cụm khác
+BDD25,calibration,edge;low_visibility;conflict,Đèn thật và phản chiếu trên đường ướt; box sát ngưỡng
+LISA03,calibration,critical;conflict,Loại đèn rẽ chuyên dụng và phân biệt hướng điều khiển
+BDD12,blind,normal;negative,Kiểm tránh false positive trong cảnh đường phố ban ngày
+BDD18,blind,edge;low_visibility;small_far,Phân biệt tín hiệu đi bộ và nguồn sáng xa ban đêm
+BDD22,blind,edge;negative,Không nhầm biển báo hoặc đèn đường thành traffic_light
+BDD26,blind,ambiguity;low_visibility,Phân biệt màu trực tiếp với độ chắc chắn của geometry khi lóa
+LISA08,blind,critical;conflict,Kiểm phân biệt tín hiệu mũi tên và tín hiệu tròn

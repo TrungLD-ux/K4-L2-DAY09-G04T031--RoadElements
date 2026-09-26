@@ -1,16 +1,13 @@
 sample_id,decision_id,expected,severity,rationale
-BDD02,1,label=traffic_light x3;state=green|green|green,major,"Có 3 cụm đèn giao thông nhìn thấy rõ và cùng hướng điều khiển dòng xe đi thẳng của ego; cả 3 đang hiển thị xanh."
-BDD07,1,label=traffic_light x2;state=green|green,major,"Có 2 cụm đèn vật lý ở hai phía của giao lộ, đều hướng về dòng xe của ego và đều đang sáng xanh."
-BDD07,2,geometry:bounding box ôm sát phần cụm vỏ đèn nhìn thấy,major,"Mỗi cụm đèn phải có một box riêng và box không bao gồm cột, dây điện hoặc vùng nền xung quanh."
-BDD11,1,label=traffic_light x0,major,"Không thấy cụm đèn giao thông dành cho xe đạt điều kiện label; tín hiệu hình bàn tay đỏ ở bên phải là đèn dành cho người đi bộ và thuộc out of scope."
-BDD12,1,label=traffic_light x0,major,"Không thấy cụm đèn giao thông dành cho xe trong vùng quan sát; không được label các đối tượng không phải traffic light."
-BDD15,1,label=traffic_light x0,major,"Không có cụm traffic light đủ rõ và đủ kích thước để xác định là instance hợp lệ theo inclusion rule; các vật thể nhỏ ở xa không đủ bằng chứng để label."
-BDD17,1,label=traffic_light x0,major,"Có các tín hiệu rất nhỏ ở xa nhưng kích thước cụm đèn không đạt ngưỡng 10 pixel; phải bỏ qua theo exclusion rule."
-BDD17(2),1,label=traffic_light x0,major,"Các traffic light nhìn thấy ở rất xa không đạt ngưỡng kích thước tối thiểu 10 pixel nên không tạo annotation."
-BDD18,1,label=traffic_light x0,major,"Tín hiệu nhìn rõ ở phía bên phải là tín hiệu dành cho người đi bộ; các vehicle traffic light ở xa không đạt điều kiện kích thước để label."
-BDD20,1,label=traffic_light x0,major,"Không có cụm traffic light đạt điều kiện inclusion trong vùng quan sát; các vật thể rất xa không đủ kích thước để tạo instance."
-BDD21,1,label=traffic_light x2;state=green|green,critical,"Có 2 cụm traffic light cùng điều khiển hướng đi của ego và cả hai đang sáng xanh; không được chuyển một cụm sang unknown nếu màu xanh vẫn xác định được trực tiếp."
-BDD22,1,label=traffic_light x0,major,"Không thấy cụm traffic light điều khiển hướng đi thẳng của ego; biển báo giao thông không thuộc class traffic_light."
-BDD24,1,label=traffic_light x0,major,"Không thấy cụm traffic light đủ rõ trong ảnh; không tạo box cho các nguồn sáng hoặc vật thể không xác định là traffic light."
-BDD25,1,label=traffic_light x5;state=green|green|green|green|green,major,"Có 5 cụm traffic light vật lý nhìn thấy dọc hướng di chuyển, đều đang hiển thị xanh; mỗi cụm phải được tính là một instance riêng."
-LISA03,1,label=traffic_light x2;state=red|red,critical,"Hai cụm đèn dành cho hướng đi thẳng của ego đang hiển thị đỏ. Cụm có mũi tên rẽ trái ở phía trên bên trái là out of scope và không được label."
+BDD12,1,IGNORE: không tạo box cho biển hiệu trạm xăng và cửa hàng,major,Các biển hiệu không phải cụm đèn giao thông
+BDD12,2,IGNORE: không tạo box cho đèn xe phía trước,major,Đèn phương tiện ngoài scope
+BDD18,1,IGNORE: tín hiệu bàn tay sáng ở bên phải ảnh,critical,Tín hiệu người đi bộ không điều khiển xe cơ giới
+BDD18,2,IGNORE: đèn hậu các xe trong làn đường,major,Đèn xe không phải traffic_light dù có màu đỏ
+BDD22,1,label=traffic_light x0,major,Ảnh đường lớn có biển chỉ dẫn và cột chiếu sáng; không thấy cụm traffic_light hợp lệ
+BDD22,2,IGNORE: biển chỉ dẫn xanh bên phải,major,Không nhầm màu xanh của biển với tín hiệu đèn
+BDD26,1,LABEL: cụm gần phía trên trái có state=green và needs_review=true,major,Lõi tín hiệu xanh nhìn trực tiếp được nhưng ranh giới vỏ bị lóa cần review; không mặc định unknown
+BDD26,2,geometry: cụm gần trên trái khoanh phần vỏ xác định được hoặc lõi tín hiệu khi vỏ không rõ; loại halo cột và vệt phản chiếu; needs_review=true,major,Biên không rõ cần review hình học; không mở box theo quầng loang
+BDD26,3,IGNORE: vệt xanh phản chiếu trên nắp xe phía dưới ảnh,major,Phản chiếu không phải instance độc lập
+LISA08,1,IGNORE: cụm mũi tên rẽ trái phía trên tại x khoảng 747 y khoảng 164,critical,Đèn rẽ chuyên dụng ngoài phạm vi hướng đi thẳng
+LISA08,2,LABEL: cụm tròn trên giữa tại x khoảng 940 y khoảng 170 có state=red,critical,Không suy màu từ cụm khác hoặc gán xanh khi tín hiệu trực tiếp là đỏ
+LISA08,3,geometry: box cụm trên giữa ôm vỏ nhìn thấy; không gộp cụm mũi tên và không chứa cần treo,major,Mỗi cụm vỏ là một instance riêng; biên rõ mục tiêu lệch không quá 2 px mỗi cạnh

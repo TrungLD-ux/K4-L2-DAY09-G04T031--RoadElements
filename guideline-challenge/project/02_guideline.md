@@ -1,100 +1,50 @@
-# Annotation guideline — Nhận diện và phân trạng thái đèn giao thông trực tiếp điều khiển Ego-vehicle
+# Annotation guideline — Traffic lights cho hướng đi thẳng
 
 **Version:** v2
 
-<!--
-v0 = chưa có bản nháp. Đổi dòng Version ở trên thành v1 khi xong bản nháp đầu, v2 sau calibration, v3 sau blind
-handoff; mỗi lần tăng version ghi một dòng vào 08_revision_log.md. `make freeze` đòi v2 trở lên.
-
-File này là thứ nhóm peer nhận nguyên văn trong blind pack và là Guide dán vào CVAT. Peer KHÔNG nhận
-edge_case_cards.md, gold_decisions.csv hay sample_pack.csv. Rule nào peer cần biết phải nằm ở đây.
-No hidden rules: rule chỉ giải thích bằng miệng thì coi như không tồn tại.
-Ví dụ trong guideline chỉ dùng ảnh split example hoặc calibration, không dùng ảnh blind.
--->
+Bản v2 sau calibration ngày 2026-09-26: đã so export độc lập của Thái và Trung trên cùng 6 ảnh. Các quy tắc dưới đây xử lý bất đồng và lỗi cùng mắc trong lượt gán ban đầu; không có tuyên bố đã gán lại hoặc đo đồng thuận sau sửa.
 
 ## 1. Objective + scope
-
-* **Mục tiêu (Objective):** Khoanh vùng và xác định trạng thái màu của các cụm đèn giao thông **đang trực tiếp điều khiển hướng đi thẳng của chiếc xe đang mang camera (ego-vehicle)**. Kết quả này phục vụ tác vụ ra quyết định đi/dừng cho xe tự lái.
-* **Trong phạm vi (In scope):** Các cụm vỏ đèn giao thông hướng về phía camera, áp dụng cho làn đường mà xe ego-vehicle đang chạy hoặc dự định đi thẳng tới.
-* **Ngoài phạm vi (Out of scope - KHÔNG vẽ):** 
-  * Đèn tín hiệu dành riêng cho người đi bộ.
-  * Đèn quay lưng lại với camera (đèn của làn ngược chiều).
-  * Đèn của các ngã rẽ cắt ngang.
-  * Đèn mũi tên điều khiển rẽ trái/phải chuyên dụng (trong khi xe ego-vehicle đang ở làn đi thẳng).
+Gán cụm đèn dành cho xe cơ giới điều khiển hướng đi thẳng của xe mang camera. Chỉ dùng ảnh hiện tại. Loại đèn đi bộ, đèn mũi tên rẽ chuyên dụng, đèn quay lưng, đèn rõ ràng phục vụ đường cắt ngang, đèn xe/đường/quảng cáo và phản chiếu.
+Đèn rẽ rõ ràng vẫn bị loại dù không thấy vạch làn. Nếu chưa rõ cụm nào điều khiển hướng đi thẳng, giữ các ứng viên không bị loại trừ rõ ràng, đủ kích thước và bật review. Không đoán ý định xe rẽ.
 
 ## 2. Annotation unit
-
-* **Đơn vị:** Ảnh tĩnh (Image).
-* **Instance:** Mỗi cụm vỏ đèn giao thông vật lý (thường chứa 3 bóng Xanh/Đỏ/Vàng) được tính là **1 instance**. Nếu tại ngã tư có 2 cụm đèn cùng điều khiển làn đi thẳng của xe mình (ví dụ: 1 cái trên cột bên phải, 1 cái treo ngang trên vươn), phải vẽ **2 khung bounding box riêng biệt** cho 2 cụm đèn đó.
+Một cụm vỏ vật lý = một instance, kể cả cụm nằm ngang. Hai cụm cùng điều khiển một hướng phải có hai rectangle riêng. Dùng Shape trên ảnh tĩnh; không Track, không gộp nhiều cụm.
 
 ## 3. Geometry rule
-
-* **Công cụ:** Khung chữ nhật (Bounding Box).
-* **Quy tắc vẽ (Tightness):** Khung chữ nhật phải ôm sát **chu vi của cụm vỏ đèn** (visible portion - bao gồm cả phần lưỡi trai che nắng của bóng đèn nếu nhìn rõ).
-* **Tuyệt đối KHÔNG:** 
-  * Không vẽ bao trùm luôn cả cột đèn, dây điện hoặc cần vươn của đèn.
-  * Không chỉ khoanh mỗi cái bóng đèn đang sáng. Phải khoanh toàn bộ cụm vỏ chứa cả 3 bóng.
-* **Quy tắc khi bị che khuất (Occlusion):** Chỉ khoanh ôm sát phần cụm vỏ đèn còn nhìn thấy được, tuyệt đối không tự nội suy (amodal) và vẽ tràn khung ra phần bị che bởi vật cản (biển báo, cây cối, xe tải).
+Ôm sát vỏ nhìn thấy và chụp che nắng; loại cột, dây, giá đỡ, nền, quầng loang và vệt nước. Không chỉ khoanh bóng sáng nếu nhìn thấy vỏ. Biên rõ: mục tiêu lệch ≤2 px mỗi cạnh.
+Bị che/cắt biên: box giới hạn phần nhìn thấy của cùng cụm, không đoán phần bị che/ngoài ảnh. Bật thuộc tính CVAT occluded nếu có vật che; không tách một vỏ thành nhiều instance. Hình học không chắc phải review.
+Ban đêm không rõ vỏ nhưng xác nhận được cụm thật: khoanh lõi phát sáng, không halo; bật review vì dùng hình học thay thế. Không xác định được cả nguồn sáng thật thì ghi issue theo mục 7, không tạo box tùy tiện.
 
 ## 4. Taxonomy
-
-Bảng đầy đủ nằm ở `03_ontology_and_cvat_setup.md`. Dưới đây là taxonomy áp dụng trong CVAT:
-* **Class:** `traffic_light`
-* **Attribute 1 - `state` (Trạng thái màu):** 
-  * `red`: Đang sáng Đỏ và màu đỏ có thể xác định trực tiếp từ chính cụm đèn.
-  * `green`: Đang sáng Xanh và màu xanh có thể xác định trực tiếp từ chính cụm đèn.
-  * `yellow`: Đang sáng Vàng và màu vàng có thể xác định trực tiếp từ chính cụm đèn.
-  * `off`: Nhìn rõ cụm đèn và xác định được rằng không có bóng nào đang sáng.
-  * `unknown`: Nhìn thấy cụm đèn nhưng không đủ bằng chứng trực tiếp để xác định màu/trạng thái, ví dụ do lóa, mờ, chói, phản chiếu hoặc che khuất. Không được suy luận màu từ cụm đèn khác hoặc từ ngữ cảnh giao thông.
-  * *Default:* `__undefined__` (Bắt buộc người vẽ phải tự chọn, không được để trống).
-* **Attribute 2 - `needs_review` (Đánh dấu cần xem xét):** 
-  * `false` (Mặc định): Chắc chắn đèn này điều khiển làn của xe mình.
-  * `true`: Dùng khi có sự mơ hồ, phân vân (xem mục 7).
+Class: traffic_light, rectangle.
+- red/green/yellow: màu nhìn trực tiếp trong chính cụm. Không thấy vỏ hoặc bị lóa không tự động đồng nghĩa unknown.
+- off: thấy rõ cụm và đủ chi tiết xác nhận không bóng nào sáng.
+- unknown: chưa đủ bằng chứng phân biệt màu hoặc off; không đoán theo vị trí bóng/xe/đèn khác.
+- __undefined__: mặc định nhắc chọn, không hợp lệ khi bàn giao.
+- needs_review=false: scope, geometry và màu đều rõ. true: bất kỳ thành phần nào chưa chắc, mọi unknown hoặc khi dùng lõi sáng thay vỏ.
 
 ## 5. Inclusion / exclusion
-
-* **Bắt buộc label (Inclusion):** Bất kỳ cụm đèn đi thẳng nào dành cho xe mình, dù sáng hay tắt, miễn là kích thước cụm vỏ đèn **≥ 10 pixel** ở cả chiều ngang và dọc.
-* **Trường hợp ignore (Exclusion - KHÔNG VẼ):**
-  * Kích thước cụm đèn quá nhỏ, < 10 pixel (thường ở chân trời).
-  * Cụm đèn hậu màu đỏ của ô tô phía trước (dễ nhầm vào ban đêm).
-  * Các loại đèn đường, đèn chiếu sáng, đèn trang trí, biển quảng cáo LED.
+Đo tọa độ ảnh gốc: width=xbr-xtl, height=ybr-ytl. Chỉ gán khi CẢ HAI ≥10 px. Một chiều <10 thì IGNORE; zoom không đổi kích thước thật. Không làm tròn 9.87 thành 10, không nới box để vượt ngưỡng. Ngưỡng áp dụng phần nhìn thấy hoặc lõi sáng trong ngoại lệ mục 3. Cụm dưới ngưỡng không tạo box chỉ để review.
 
 ## 6. Visibility / occlusion
-
-* **Bị che khuất một phần (Occlusion):** Nếu đèn bị cành cây che mất một phần, vẽ khung bounding box bám sát rìa của phần vỏ đèn/bóng đèn còn hở ra.
-* **Nhỏ / Xa:** Dưới 10 pixel thì bỏ qua hoàn toàn.
-* **Loá nắng / Phản chiếu / Nhòe do ban đêm:**
-  Vẫn vẽ Bounding box nếu xác định được đó là một cụm traffic light đáp ứng Inclusion.
-  Nếu không thể xác định màu/trạng thái từ chính cụm đèn, chọn `state = unknown`.
-  Không được suy luận màu từ quầng sáng, đèn của cụm khác hoặc ngữ cảnh.
+Phản chiếu trên đường/kính/nắp xe không phải instance thứ hai. Mưa/đêm không mặc định unknown; đánh giá màu trực tiếp. Che khuất không đồng nghĩa off. Đủ kích thước nhưng màu không rõ: unknown và review. Mất toàn bộ đối tượng: không vẽ amodal.
 
 ## 7. Ambiguity / escalation
-
-* **IGNORE (Bỏ qua):** Bằng chứng rõ ràng ngã tư có đèn rẽ trái và đèn đi thẳng, nhưng xe mình đang đè lên vạch rẽ trái $\rightarrow$ Ignore đèn đi thẳng, lúc này đèn đi thẳng là Out of scope.
-* **ESCALATE (Báo cáo ca khó):**
-  Khi không đủ bằng chứng để xác định cụm đèn nào trực tiếp điều khiển ego-vehicle, không tự ý bỏ qua một cụm đèn.
-
-  → Vẽ Bounding Box cho các cụm đèn đáp ứng Inclusion.
-  → Chọn `state` dựa trên bằng chứng quan sát trực tiếp.
-  → Nếu màu không xác định được, chọn `state = unknown`.
-  → Bắt buộc đặt `needs_review = true`.
-* **UNKNOWN (Không rõ màu):** Khung cảnh sáng lóa, thấy vỏ đèn nhưng không rõ bóng nào đang sáng $\rightarrow$ Vẽ Bounding Box, chọn `state` = `unknown`.
+Trình tự: xác định nguồn tín hiệu thật → scope → kích thước → geometry → state → review.
+Chưa rõ hướng điều khiển: giữ ứng viên đủ ngưỡng và chưa bị loại trừ rõ, chọn state trực tiếp, bật review. Không thể tạo geometry có căn cứ: ghi CVAT issue gồm sample_id, vị trí và câu hỏi. QA owner Lê Danh Trung cùng Gold owner chốt; không giải quyết được thì hỏi Lab Coach. Không export final khi còn issue này. Issue không nằm trong XML nên lưu nội dung xử lý trong báo cáo.
 
 ## 8. Temporal rule
+Mỗi ảnh độc lập. Không dùng frame trước/sau để suy màu hoặc ý định xe. LISA cùng chuỗi có nguy cơ ghi nhớ bối cảnh.
 
-Không áp dụng — task ảnh tĩnh.
+## 9. Examples từ example/calibration
+- BDD11 (example): tín hiệu bàn tay bên phải dành cho người đi bộ, không gán traffic_light.
+- BDD15 (calibration): hai box Thái rộng 5.08 và 7.58 px, không đạt inclusion; không nới box.
+- BDD20 (calibration): box Thái 6.09×8.77 px, IGNORE dù đã chọn unknown.
+- BDD21 (calibration): export có green và unknown; không đổi unknown thành green chỉ vì box khác xanh. Unknown phải review và kiểm ảnh gốc.
+- BDD25 (calibration): tách cụm thật trên cao khỏi phản chiếu dưới đường. Box 9.87×12.12 px chưa đạt ngưỡng rộng.
+- LISA03 (calibration): cụm trên trái có mũi tên rẽ, loại cụm đó. Các cụm tròn xử lý riêng, không gộp cả ngã tư.
 
-## 9. Examples
-
-| sample_id | Thấy gì | Expected output | Rule áp dụng |
-|---|---|---|---|
-| BDD_example_01 | Ngã tư có 3 cụm đèn: 2 cụm đi thẳng màu xanh, 1 cụm mũi tên rẽ trái màu đỏ. Xe đang đi thẳng. | Vẽ 2 bounding box cho 2 cụm đèn xanh. `state` = `green`, `needs_review` = `false`. Bỏ qua cụm đèn rẽ trái. | Mục 1 (Out of scope) và Mục 4. |
-| BDD_example_02 | Đèn treo ngang giữa trời nắng gắt, chói lóa trắng xóa, vỏ đèn bị cây che khuất một nửa. | Vẽ khung chữ nhật tight sát phần vỏ đèn còn thò ra khỏi cành cây. `state` = `unknown`, `needs_review` = `false`. | Mục 3 (Occlusion) và Mục 6 (Loá). |
-| BDD_example_03 | Đèn mờ tít xa ở đường chân trời, zoom hết cỡ thấy kích thước khoảng 5 pixel. | Không vẽ gì cả (Ignore). | Mục 5 (Exclusion < 10 pixel). |
-| BDD_example_04 | Trời tối đen, không thấy vỏ đèn, chỉ thấy một quầng sáng màu đỏ mờ mờ trên cao đúng vị trí ngã tư. | Vẽ bounding box ôm sát quầng sáng màu đỏ. `state` = `red`, `needs_review` = `false`. | Mục 6 (Visibility ban đêm). |
-
-## 10. Common mistakes
-
-* **Khoanh nhầm đèn mũi tên rẽ (Critical error):** Xe đang ở làn đi thẳng, nhưng người vẽ lại vẽ bounding box ôm lấy cụm đèn hình mũi tên rẽ trái/phải chuyên dụng. Hậu quả: AI học nhầm tín hiệu rẽ thành tín hiệu đi thẳng, gây tai nạn. $\rightarrow$ *Cách tránh:* Nhìn kỹ phần bóng đèn xem có hình mũi tên không, nếu có mũi tên mà xe mình đang đi thẳng thì BỎ QUA.
-* **Vẽ bounding box quá lỏng (Geometry error):** Người vẽ khoanh lấn bao gồm cả không gian bầu trời, cột đèn và dây cáp treo đèn. $\rightarrow$ *Cách tránh:* Phóng to (Zoom) ảnh để canh các góc của Bounding box chạm sát các mép nhựa (vỏ) của cụm đèn.
-* **Tự nội suy màu sắc (Hallucination):** Ảnh lóa nắng hoặc nhiễu không thể phân biệt được màu, nhưng người vẽ tự nhìn đèn xe bên cạnh để suy luận màu đèn hiện tại. $\rightarrow$ *Cách tránh:* Mắt người không thấy rõ thì máy cũng không thấy, nghiêm ngặt tuân thủ chọn `state` = `unknown`.
+## 10. Common mistakes và self-check
+Không còn undefined; mọi unknown có review; mọi box đủ hai chiều; không gộp cụm; không gán đèn rẽ/đi bộ/phản chiếu; không suy màu; kiểm lại biên bất định. Đỏ thành xanh và nhầm hướng điều khiển là critical.
+Chênh count cần kiểm từng vị trí, không mặc định người vẽ nhiều hơn đúng. Tool calibration so count và multiset thuộc tính, không chứng minh geometry hay khớp đúng từng object.
