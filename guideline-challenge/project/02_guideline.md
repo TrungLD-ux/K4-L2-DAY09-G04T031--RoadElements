@@ -1,6 +1,6 @@
 # Annotation guideline — Nhận diện và phân trạng thái đèn giao thông trực tiếp điều khiển Ego-vehicle
 
-**Version:** v1
+**Version:** v2
 
 <!--
 v0 = chưa có bản nháp. Đổi dòng Version ở trên thành v1 khi xong bản nháp đầu, v2 sau calibration, v3 sau blind
@@ -41,11 +41,11 @@ Ví dụ trong guideline chỉ dùng ảnh split example hoặc calibration, kh�
 Bảng đầy đủ nằm ở `03_ontology_and_cvat_setup.md`. Dưới đây là taxonomy áp dụng trong CVAT:
 * **Class:** `traffic_light`
 * **Attribute 1 - `state` (Trạng thái màu):** 
-  * `red`: Đang sáng Đỏ.
-  * `green`: Đang sáng Xanh.
-  * `yellow`: Đang sáng Vàng.
-  * `off`: Không bóng nào sáng (đèn tắt / mất điện).
-  * `unknown`: Thấy rõ cụm đèn nhưng bị lóa nắng, mờ sương, hoặc quá chói không thể phân biệt được màu.
+  * `red`: Đang sáng Đỏ và màu đỏ có thể xác định trực tiếp từ chính cụm đèn.
+  * `green`: Đang sáng Xanh và màu xanh có thể xác định trực tiếp từ chính cụm đèn.
+  * `yellow`: Đang sáng Vàng và màu vàng có thể xác định trực tiếp từ chính cụm đèn.
+  * `off`: Nhìn rõ cụm đèn và xác định được rằng không có bóng nào đang sáng.
+  * `unknown`: Nhìn thấy cụm đèn nhưng không đủ bằng chứng trực tiếp để xác định màu/trạng thái, ví dụ do lóa, mờ, chói, phản chiếu hoặc che khuất. Không được suy luận màu từ cụm đèn khác hoặc từ ngữ cảnh giao thông.
   * *Default:* `__undefined__` (Bắt buộc người vẽ phải tự chọn, không được để trống).
 * **Attribute 2 - `needs_review` (Đánh dấu cần xem xét):** 
   * `false` (Mặc định): Chắc chắn đèn này điều khiển làn của xe mình.
@@ -63,12 +63,21 @@ Bảng đầy đủ nằm ở `03_ontology_and_cvat_setup.md`. Dưới đây là
 
 * **Bị che khuất một phần (Occlusion):** Nếu đèn bị cành cây che mất một phần, vẽ khung bounding box bám sát rìa của phần vỏ đèn/bóng đèn còn hở ra.
 * **Nhỏ / Xa:** Dưới 10 pixel thì bỏ qua hoàn toàn.
-* **Loá nắng / Phản chiếu / Nhòe do ban đêm:** Vẫn vẽ Bounding box ôm sát quầng sáng của đèn (nếu không thấy vỏ đèn do đêm tối). Ở thuộc tính `state`, tuyệt đối không tự đoán màu. Bắt buộc chọn giá trị `unknown`.
+* **Loá nắng / Phản chiếu / Nhòe do ban đêm:**
+  Vẫn vẽ Bounding box nếu xác định được đó là một cụm traffic light đáp ứng Inclusion.
+  Nếu không thể xác định màu/trạng thái từ chính cụm đèn, chọn `state = unknown`.
+  Không được suy luận màu từ quầng sáng, đèn của cụm khác hoặc ngữ cảnh.
 
 ## 7. Ambiguity / escalation
 
 * **IGNORE (Bỏ qua):** Bằng chứng rõ ràng ngã tư có đèn rẽ trái và đèn đi thẳng, nhưng xe mình đang đè lên vạch rẽ trái $\rightarrow$ Ignore đèn đi thẳng, lúc này đèn đi thẳng là Out of scope.
-* **ESCALATE (Báo cáo ca khó):** Đường không có vạch kẻ làn, xe đang đứng giữa đường, phía trước có 4 cụm đèn (vừa đi thẳng vừa rẽ) và không rõ đèn nào thực sự điều khiển xe mình $\rightarrow$ **Vẽ Bounding Box cho tất cả đèn**, chọn `state` hiện tại của đèn, đồng thời bắt buộc tick chọn **`needs_review = true`**.
+* **ESCALATE (Báo cáo ca khó):**
+  Khi không đủ bằng chứng để xác định cụm đèn nào trực tiếp điều khiển ego-vehicle, không tự ý bỏ qua một cụm đèn.
+
+  → Vẽ Bounding Box cho các cụm đèn đáp ứng Inclusion.
+  → Chọn `state` dựa trên bằng chứng quan sát trực tiếp.
+  → Nếu màu không xác định được, chọn `state = unknown`.
+  → Bắt buộc đặt `needs_review = true`.
 * **UNKNOWN (Không rõ màu):** Khung cảnh sáng lóa, thấy vỏ đèn nhưng không rõ bóng nào đang sáng $\rightarrow$ Vẽ Bounding Box, chọn `state` = `unknown`.
 
 ## 8. Temporal rule
