@@ -8,13 +8,14 @@
         "name": "state",
         "input_type": "select",
         "mutable": false,
-        "values": ["__undefined__", "red", "green", "yellow", "off", "unknown"]
-      },
-      {
-        "name": "needs_review",
-        "input_type": "checkbox",
-        "mutable": false,
-        "values": ["false"]
+        "values": [
+          "undefined",
+          "red",
+          "green",
+          "yellow",
+          "off",
+          "unknown"
+        ]
       }
     ]
   }
