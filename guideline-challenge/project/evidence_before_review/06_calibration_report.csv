@@ -1,0 +1,4 @@
+sample_id,item,values_by_annotator,diagnosis,action,rule_change
+BDD21,state,"Thai=unknown; Trung=green","data_ambiguity","revise_rule","Quy tắc mờ lóa chưa rõ. Bổ sung: chỉ chọn red/green/yellow khi xác định được trực tiếp từ đèn. Mờ lóa không đủ bằng chứng thì bắt buộc chọn unknown, không tự suy luận màu."
+BDD25,traffic_light,"Thai=4; Trung=5","guideline_gap","revise_rule","Chưa rõ quy tắc cụm đèn điều khiển ego. Bổ sung: mỗi cụm vỏ vật lý là 1 instance nếu điều khiển hướng đi thẳng. Không gộp chung, không bỏ qua vì khác độ cao. Không rõ thì ESCALATE."
+BDD25,traffic_light,"Thai=4; Trung=5","guideline_gap","add_example","Khác biệt về số lượng instance. Cần làm rõ: hai cụm cùng điều khiển hướng đi thẳng thì vẽ hai box riêng. Không bỏ qua cụm nào nếu đáp ứng inclusion rule."

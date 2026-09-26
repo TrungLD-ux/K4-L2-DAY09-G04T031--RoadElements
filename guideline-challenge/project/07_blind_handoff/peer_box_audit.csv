@@ -1,0 +1,12 @@
+sample_id,box_index,width_px,height_px,state,needs_review,below_minimum,undefined,unknown_without_review
+BDD18,1,13.98,15.65,green,true,False,False,False
+BDD18,2,13.31,13.01,__undefined__,true,False,True,False
+BDD22,1,7.43,11.42,unknown,false,True,False,True
+BDD22,2,7.7,12.32,unknown,false,True,False,True
+BDD26,1,39.59,70.52,green,true,False,False,False
+LISA08,1,32.99,72.58,red,false,False,False,False
+LISA08,2,31.34,64.33,red,false,False,False,False
+LISA08,3,31.34,64.33,red,false,False,False,False
+LISA08,4,14.36,29.51,red,false,False,False,False
+LISA08,5,12.73,23.95,red,false,False,False,False
+LISA08,6,15.73,29.15,red,false,False,False,False

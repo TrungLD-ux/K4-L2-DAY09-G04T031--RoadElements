@@ -1,8 +1,8 @@
 # Annotation guideline — Traffic lights cho hướng đi thẳng
 
-**Version:** v2
+**Version:** v3
 
-Bản v2 sau calibration ngày 2026-09-26: đã so export độc lập của Thái và Trung trên cùng 6 ảnh. Các quy tắc dưới đây xử lý bất đồng và lỗi cùng mắc trong lượt gán ban đầu; không có tuyên bố đã gán lại hoặc đo đồng thuận sau sửa.
+Bản v3 sau đối chiếu export blind của team03 ngày 2026-09-26, kế thừa v2 sau calibration Thái–Trung. Bổ sung checklist từ lỗi quan sát trong export; chưa nhận feedback tự thuật của peer, chưa có lượt gán lại sau sửa. Gold và bản guideline v2 ở tag gold-freeze được giữ nguyên để chấm lượt đầu.
 
 ## 1. Objective + scope
 Gán cụm đèn dành cho xe cơ giới điều khiển hướng đi thẳng của xe mang camera. Chỉ dùng ảnh hiện tại. Loại đèn đi bộ, đèn mũi tên rẽ chuyên dụng, đèn quay lưng, đèn rõ ràng phục vụ đường cắt ngang, đèn xe/đường/quảng cáo và phản chiếu.
@@ -48,3 +48,12 @@ Mỗi ảnh độc lập. Không dùng frame trước/sau để suy màu hoặc 
 ## 10. Common mistakes và self-check
 Không còn undefined; mọi unknown có review; mọi box đủ hai chiều; không gộp cụm; không gán đèn rẽ/đi bộ/phản chiếu; không suy màu; kiểm lại biên bất định. Đỏ thành xanh và nhầm hướng điều khiển là critical.
 Chênh count cần kiểm từng vị trí, không mặc định người vẽ nhiều hơn đúng. Tool calibration so count và multiset thuộc tính, không chứng minh geometry hay khớp đúng từng object.
+## 11. Checklist bắt buộc trước Save/Export — bổ sung v3
+1. Kiểm từng dropdown state: __undefined__ là CHƯA GÁN, không phải unknown; bật needs_review không thay thế state. Nếu thực sự không biết màu, chọn unknown rồi bật review.
+2. Đọc width=xbr-xtl và height=ybr-ytl trên ảnh gốc cho từng box sát ngưỡng. Một chiều <10px thì loại, kể cả state unknown; không kéo rộng box để đạt ngưỡng.
+3. Kiểm riêng hình tín hiệu trước kiểm màu: mũi tên rẽ chuyên dụng luôn ngoài scope đi thẳng, kể cả cùng đỏ với cụm tròn bên cạnh. Không dùng review để giữ đối tượng đã biết ngoài scope.
+4. Khi geometry dùng lõi sáng thay vỏ: bỏ vùng sáng loang có biên mờ bao quanh; nếu không xác định ranh giới có căn cứ, ghi issue để QA quyết định. Màu đúng và review=true không tự làm geometry đạt.
+5. Khi thấy vỏ/chụp che nắng: kiểm đủ bốn cạnh và phần nhô ra phía dưới/bên hông; không dùng chiều rộng bóng sáng thay chiều rộng vỏ. Không gộp các vỏ khác nhau.
+6. Sau Save, đọc lại XML export: không còn undefined, unknown luôn review=true, mọi box đủ hai chiều và đúng scope. Bản sửa lưu tên khác với bản blind đầu để giữ bằng chứng.
+
+Ví dụ hình ảnh minh họa vẫn chỉ dùng example/calibration ở mục 9; không đưa đáp án blind vào Guide gửi lượt test mới. Checklist này được rút ra từ review output, không giả định peer đã nói ra nguyên nhân lỗi.

@@ -1,0 +1,12 @@
+Validation date: 2026-09-26
+Python: 3.11
+Unit tests: 5 passed (legacy Independence bands; sourced interval; crossed bands; invalid inputs; recorded count exceeding maximum).
+lab9.py check: G1 PASS, G2 PASS, G3 PASS, G4 PASS, G5 PASS, G6 PASS.
+lab9.py verify: frozen gold and sample pack unchanged; peer export after freeze.
+Gold-freeze commit: fa380d014f2b9a40a53cde5f2b4ce957cca1cb3b
+Freeze UTC: 2026-09-26T08:34:41Z
+Peer dumped UTC: 2026-09-26T13:59:43.490576+00:00
+GTS: D=80.0, C=66.6667, G=0.0, I=0.0, total=61.3333 (display 61.3).
+Question count source: user-estimated interval 5-20; no reconstructed question text.
+Calibration originals and peer ZIP checksums verified during review.
+Git diff --check: passed.

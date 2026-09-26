@@ -1,0 +1,6 @@
+{
+  "minimum": 5,
+  "maximum": 20,
+  "source": "khoảng ước lượng người dùng cung cấp trong phiên làm việc",
+  "detail": "Chưa có nội dung từng câu hỏi. Toàn bộ khoảng 5–20 thuộc mức I=0 của rubric; không chọn một số cụ thể và không dựng lại hội thoại."
+}

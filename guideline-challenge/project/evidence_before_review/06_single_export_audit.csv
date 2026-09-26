@@ -1,0 +1,7 @@
+sample_id,item,values_by_annotator,diagnosis,action,rule_change
+BDD15,geometry:min_width,thai=5.08px|7.58px;second_export=missing,execution_error,coaching,Kiểm cả width và height >=10px trên ảnh gốc; không nới box; đây là audit một export không phải so hai người
+BDD17,geometry:min_width,thai=10.71px|9.59px|8.18px|5.35px;second_export=missing,guideline_gap,revise_rule,Tách kiểm ngưỡng và kiểm visibility; ba box dưới ngưỡng rộng; box còn lại cần đối chiếu biên và scope
+BDD20,geometry:min_size,thai=6.09x8.77px;second_export=missing,execution_error,coaching,Box dưới ngưỡng phải ignore thay vì giữ unknown
+BDD21,attr:needs_review,thai=green:false|unknown:false;second_export=missing,guideline_gap,revise_rule,Unknown luôn đi kèm needs_review=true; không suy màu từ cụm khác
+BDD25,geometry:min_width,thai=14.03px|15.66px|13.25px|9.87px;second_export=missing,guideline_gap,revise_rule,Không làm tròn hoặc nới 9.87px thành 10px; so count phải kiểm từng vị trí thay vì chọn số lớn hơn
+LISA03,scope:turn_arrow,thai=5 boxes including upper_left_arrow;second_export=missing,execution_error,coaching,Loại cụm mũi tên rẽ chuyên dụng; kiểm các cụm còn lại theo hướng điều khiển; không mặc định count=2

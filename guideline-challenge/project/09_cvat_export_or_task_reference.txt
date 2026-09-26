@@ -1,8 +1,7 @@
-CVAT task reference — thay mọi placeholder mới là xong.
-
-CVAT version: TODO
-Task calibration (tên, id): TODO
-Task bản cuối theo guideline v3 (tên, id) hoặc lý do không có: TODO
-File export đã nộp (đường dẫn trong repo): TODO
-Guideline version dán trong Guide của task: TODO
-Ghi chú cho người tiếp nhận: TODO
+Thai: project/06_calibration_exports/thai.zip; CVAT images XML 1.1; job 25; 6 images; 18 boxes; dumped 2026-09-26 04:57:45 UTC.
+Trung: project/06_calibration_exports/trung.zip; CVAT images XML 1.1; job 18; 6 images; 19 boxes; dumped 2026-09-26 04:58:19 UTC.
+Original Trung filename: job_18_annotations_2026_09_26_04_56_05_cvat for images 1.1.zip
+User confirmed export ownership. Both original ZIP contents preserved.
+Measurement: project/06_calibration_measure.csv; diagnosis: project/06_calibration_report.csv.
+Server version and original Guide version are not independently recorded in XML.
+Peer blind export: project/07_blind_handoff/peer_output/peer_output.zip; job 17; owner username Dai; 5 images; 11 boxes; dumped 2026-09-26 13:59:43 UTC. Owner assessment is in peer_feedback.md. User-reported question estimate: 5–20, Independence=0; provenance in clarification_count.json.

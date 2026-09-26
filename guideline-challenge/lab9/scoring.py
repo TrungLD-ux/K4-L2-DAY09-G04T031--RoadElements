@@ -9,7 +9,7 @@ from typing import DefaultDict, Dict, List, Sequence, Tuple
 
 from . import LabError
 from .catalog import validate_sample_pack
-from .common import challenge_config, read_csv, require_columns, write_csv
+from .common import challenge_config, read_csv, read_json, require_columns, write_csv
 from .cvat_xml import CvatObject, parse_file
 from .freeze import freeze_integrity, load_gold
 
@@ -148,6 +148,33 @@ def _validated_scores(base: Path) -> Tuple[List[Dict[str, str]], Dict[str, str]]
     return ordered, values
 
 
+def _independence_count(base: Path, recorded: int) -> Tuple[float, int, int, str, str]:
+    """Keep the rubric unchanged; accept a sourced range only within one score band."""
+    def points(count: int) -> float:
+        return 100.0 if count == 0 else 70.0 if count <= 2 else 40.0 if count <= 4 else 0.0
+
+    path = base / "project" / "07_blind_handoff" / "clarification_count.json"
+    if not path.exists():
+        return points(recorded), recorded, recorded, str(recorded), ""
+    evidence = read_json(path)
+    if not isinstance(evidence, dict):
+        raise LabError("clarification_count.json phải là object có minimum, maximum và source.")
+    low, high = evidence.get("minimum"), evidence.get("maximum")
+    source = evidence.get("source")
+    if (type(low) is not int or type(high) is not int or low < 0 or high < low
+            or not isinstance(source, str) or not source.strip()):
+        raise LabError("Khoảng số câu hỏi hoặc nguồn trong clarification_count.json không hợp lệ.")
+    if recorded > high:
+        raise LabError("Số câu hỏi đã ghi vượt maximum; cập nhật khoảng theo bằng chứng.")
+    if points(low) != points(high):
+        raise LabError("Khoảng câu hỏi đi qua nhiều mức Independence; cần thu hẹp trước khi chốt GTS.")
+    display = str(low) if low == high else f"{low}–{high}"
+    note = (f"\n- Số câu hỏi: {display}, theo {source.strip()}. "
+            f"Log chi tiết hiện có {recorded} bản ghi; không tự tạo nội dung câu hỏi. "
+            "Mọi giá trị trong khoảng đều thuộc cùng mức Independence của rubric.")
+    return points(low), low, high, display, note
+
+
 def calculate_gts(base: Path) -> Tuple[str, Dict[str, float]]:
     """Tính summary hiện tại mà không ghi file."""
     rows, freeze = _validated_scores(base)
@@ -164,7 +191,7 @@ def calculate_gts(base: Path) -> Tuple[str, Dict[str, float]]:
     header, questions = read_csv(clarification_path)
     require_columns(clarification_path, header, CLARIFICATION_COLUMNS)
     question_count = len(questions)
-    independence = 100.0 if question_count == 0 else 70.0 if question_count <= 2 else 40.0 if question_count <= 4 else 0.0
+    independence, question_min, question_max, question_display, question_note = _independence_count(base, question_count)
 
     def score(items: Sequence[Dict[str, str]]) -> float:
         return 100.0 * sum(row["correct"] == "1" for row in items) / len(items)
@@ -189,9 +216,13 @@ def calculate_gts(base: Path) -> Tuple[str, Dict[str, float]]:
         "I": independence,
         "GTS": total,
         "critical_escapes": float(escapes),
-        "questions": float(question_count),
+        "recorded_questions": float(question_count),
+        "questions_min": float(question_min),
+        "questions_max": float(question_max),
         "gold_errors": float(len(gold_errors)),
     }
+    if question_min == question_max:
+        metrics["questions"] = float(question_min)
     gold_note = ""
     if gold_errors:
         gold_note = (
@@ -205,10 +236,10 @@ def calculate_gts(base: Path) -> Tuple[str, Dict[str, float]]:
 | D · Decision accuracy | {decision:.1f} | {sum(row['correct'] == '1' for row in decision_rows)} / {len(decision_rows)} |
 | C · Critical decisions | {critical:.1f} | {sum(row['correct'] == '1' for row in critical_rows)} / {len(critical_rows)} |
 | G · Geometry compliance | {geometry:.1f} | {sum(row['correct'] == '1' for row in geometry_rows)} / {len(geometry_rows)} |
-| I · Independence | {independence:.1f} | {question_count} câu hỏi |
+| I · Independence | {independence:.1f} | {question_display} câu hỏi |
 | **GTS** | **{total:.1f}** | 0.60D + 0.20C + 0.10G + 0.10I |
 
-- Critical escapes: {escapes}{gold_note}
+- Critical escapes: {escapes}{gold_note}{question_note}
 - Frozen at: {freeze.get('frozen_at', '(không rõ)')}
 - GTS đo khả năng truyền đạt của specification, không đo kỹ năng tổng quát của peer annotator.
 """

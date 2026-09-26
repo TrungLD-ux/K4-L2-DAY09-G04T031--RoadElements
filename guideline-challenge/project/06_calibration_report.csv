@@ -1,4 +1,13 @@
 sample_id,item,values_by_annotator,diagnosis,action,rule_change
-BDD21,state,"Thai=unknown; Trung=green","data_ambiguity","revise_rule","Quy tắc mờ lóa chưa rõ. Bổ sung: chỉ chọn red/green/yellow khi xác định được trực tiếp từ đèn. Mờ lóa không đủ bằng chứng thì bắt buộc chọn unknown, không tự suy luận màu."
-BDD25,traffic_light,"Thai=4; Trung=5","guideline_gap","revise_rule","Chưa rõ quy tắc cụm đèn điều khiển ego. Bổ sung: mỗi cụm vỏ vật lý là 1 instance nếu điều khiển hướng đi thẳng. Không gộp chung, không bỏ qua vì khác độ cao. Không rõ thì ESCALATE."
-BDD25,traffic_light,"Thai=4; Trung=5","guideline_gap","add_example","Khác biệt về số lượng instance. Cần làm rõ: hai cụm cùng điều khiển hướng đi thẳng thì vẽ hai box riêng. Không bỏ qua cụm nào nếu đáp ứng inclusion rule."
+BDD21,attr:state,thai=green|unknown;trung=green|green,data_ambiguity,add_escalation,Không suy màu giữa các cụm; cụm chưa xác định trực tiếp giữ unknown và needs_review=true; QA kiểm ảnh trước chốt
+BDD25,count,thai=4;trung=5,guideline_gap,revise_rule,Instance thêm của Trung tại (603.13;281.94;608.83;290.14) chỉ 5.70x8.20px nên loại theo ngưỡng; không chọn đáp án count lớn hơn
+BDD25,attr:state,thai=green|green|green|green;trung=green|green|green|green|green,guideline_gap,revise_rule,Khác multiset do số box khác nhau chứ không phải khác màu; phải khớp object theo vị trí trước so state
+BDD25,attr:needs_review,thai=false|false|false|false;trung=false|false|false|false|false,guideline_gap,no_change,Khác multiset vì count khác; không kết luận hai người bất đồng cách bật review từ dòng này
+BDD15,geometry:min_size,thai=2 boxes width 5.08|7.58;trung=2 boxes width 5.62|6.50,execution_error,coaching,Cả hai cùng vẽ box dưới ngưỡng; loại các box này; đồng thuận không chứng minh đúng guideline
+BDD17,geometry:min_size,thai=3 of 4 below minimum;trung=3 of 4 below minimum,execution_error,coaching,Kiểm cả hai chiều >=10px trên ảnh gốc; cả hai loại ba box dưới ngưỡng; box còn lại kiểm biên và scope trước dùng
+BDD20,geometry:min_size,thai=6.09x8.77;trung=6.10x8.80,execution_error,coaching,Cả hai cùng giữ đối tượng dưới ngưỡng; IGNORE thay vì dùng unknown để giữ box
+BDD21,geometry:min_width,thai=11.62px on upper lamp;trung=9.20px on upper lamp,data_ambiguity,add_escalation,Hai box của cùng cụm nằm khác phía ngưỡng; kiểm biên vỏ thật trước quyết định không nới box của Trung để vượt ngưỡng
+BDD25,geometry:borderline,thai=9.87x12.12;trung=10.50x14.00,data_ambiguity,add_escalation,Box gần (565;280) sát ngưỡng và khác biên; QA xác định ranh giới thực không làm tròn 9.87 lên 10
+LISA03,scope:left_arrow,thai=upper_left_arrow included;trung=upper_left_arrow included,execution_error,coaching,Cả hai loại đèn mũi tên rẽ chuyên dụng; không coi đồng thuận red là đúng scope
+LISA03,geometry:instance_correspondence,thai=5 boxes including upper_right;trung=5 boxes without upper_right and two lower boxes,guideline_gap,revise_rule,Count và multiset đều bằng nhau nhưng vị trí khác; kiểm từng cụm vỏ và hướng điều khiển; không gộp hoặc tách theo số bóng sáng
+BDD21,attr:unknown_review,thai=unknown:false;trung=no unknown on this image,guideline_gap,revise_rule,Unknown luôn needs_review=true; đây là rule sửa sau calibration không phải số liệu đã reannotate
