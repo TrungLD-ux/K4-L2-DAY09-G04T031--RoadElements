@@ -30,10 +30,12 @@ Default `state = __undefined__` giúp tránh bias do annotator quên đổi tr�
 
 ## Setup test
 
-Nhóm có 3 thành viên và cả 3 đều đã tham gia setup, nên chưa có thành viên độc lập để thực hiện setup test theo đúng yêu cầu.
+Setup test do em thực hiện sau khi task đã được tạo.
 
-Khi mở task, nhóm xác định:
+Khi mở task, em xác định:
 - Label: `traffic_light`
 - Tool: Rectangle / Bounding Box
 - Attribute cần gán: `state`
 - Bật `needs_review` khi đèn bị che, quá nhỏ, khó xác định màu hoặc không chắc cách gán nhãn.
+
+Kết quả: em có thể mở task và thực hiện gán nhãn theo guideline. Chỗ cần chú ý nhất là phải tự chọn `state` và đánh dấu `needs_review` ở các trường hợp khó.
