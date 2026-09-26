@@ -1,1 +1,15 @@
 sample_id,split,tags,reason
+BDD07,example,normal,Đèn đi thẳng xanh rõ ràng làm ví dụ
+LISA01,example,normal;conflict,Ví dụ ngã tư có đèn rẽ trái và đi thẳng
+BDD02,calibration,normal,Đèn ban ngày bình thường
+BDD11,calibration,normal,Đèn khu dân cư
+BDD15,calibration,small_far;ambiguity,Đèn khá xa dễ nhầm
+BDD17,calibration,edge;low_visibility,Đèn mờ nhòe do mưa và kính đọng nước
+BDD20,calibration,ambiguity,Ảnh có bóng phản chiếu trên kính lái
+BDD21,calibration,normal;edge,Đường có 2 cụm đèn hai bên cho làn đi thẳng
+BDD25,calibration,edge;low_visibility,Cảnh báo không khoanh bóng đèn phản chiếu trên mặt đường
+LISA03,calibration,critical,Test nội bộ loại bỏ đèn rẽ trái
+BDD18,blind,edge;low_visibility,Ảnh thi: Tối đen chỉ thấy quầng đỏ không thấy vỏ đèn
+BDD22,blind,edge;small_far,Ảnh thi: Đèn tít chân trời dưới 10px (cấm vẽ)
+BDD26,blind,edge;ambiguity,Ảnh thi: Đèn chói lóa khổng lồ không rõ vỏ
+LISA08,blind,critical;conflict,Ảnh thi: Gài bẫy khoanh nhầm đèn rẽ trái
